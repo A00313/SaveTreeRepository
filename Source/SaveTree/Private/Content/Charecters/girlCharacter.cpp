@@ -52,9 +52,16 @@ AgirlCharacter::AgirlCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Input
+// Called when the game starts or when spawned
 
+void AgirlCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	//Seed = GetWorld()->SpawnActor<ASeeds>(SeedClass);
+	
+	//Seed->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("Socket2"));
+	//Seed->SetOwner(this);
+}
 void AgirlCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
@@ -73,9 +80,30 @@ void AgirlCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AgirlCharacter::LookUpAtRate);
 
+	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AgirlCharacter::Shoot);
+
 	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AgirlCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AgirlCharacter::TouchStopped);
+}
+
+void AgirlCharacter::Shoot()
+{
+	//FVector LocationOfTip = GetActorLocation();
+
+
+
+	//FVector ViewLocation = Camera->GetComponentLocation();// FVector(0, 0, 0);
+	//FRotator ViewRotation = Camera->GetComponentRotation();// FRotator(0, 0, 0);
+
+
+	//FVector End = (ViewLocation + ViewRotation.Vector() * shootRange);
+
+	//FCollisionQueryParams Params;
+	//Params.AddIgnoredActor(this);
+	//Params.AddIgnoredActor(GetOwner());
+	//ASeeds* SpawnedSeed = GetWorld()->SpawnActor<ASeeds>(Seed, GetMovementComponent()->GetActorTransform(), Params);
+	//DrawDebugLine(GetWorld(), LocationOfTip, End, FColor::Red, false, 2.f, 0, 2.f);
 }
 
 void AgirlCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
@@ -99,6 +127,8 @@ void AgirlCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
 }
+
+
 
 void AgirlCharacter::MoveForward(float Value)
 {
